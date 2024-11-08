@@ -1,70 +1,52 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.game-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-/* App.css */
-.deck-column {
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 200px;
-  background-color: #f9f9f9;
-  border-left: 1px solid #ddd;
-  padding: 20px;
-  height: 100vh;
-  overflow-y: auto;
-}
-.game-container {
   text-align: center;
+  width: 100vw;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.controls {
+  margin-bottom: 20px;
 }
 
 .hand-container {
-  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;         /* Increased width */
+  max-width: 800px;   /* Increased max-width */
+  min-height: 200px;  /* Slightly increased min-height */
+  border: 2px solid #ddd;
+  padding: 10px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 .card-hand {
   display: flex;
   justify-content: center;
   gap: 10px;
+  height: 150px;      /* Slightly increased height for cards */
 }
 
 .card-image {
-  width: 80px; /* Adjust size as needed */
-  height: auto;
+  width: 100px;       /* Increased card size */
+  height: 140px;
+  object-fit: cover;
   border: 1px solid #ccc;
   border-radius: 8px;
+}
+
+.message-box {
+  width: 90%;         /* Increased width */
+  max-width: 800px;   /* Increased max-width */
+  min-height: 60px;   /* Increased min-height for stability */
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
 }
