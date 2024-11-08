@@ -36,3 +36,35 @@
     transform: rotate(360deg);
   }
 }
+/* App.css */
+.deck-column {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 200px;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ddd;
+  padding: 20px;
+  height: 100vh;
+  overflow-y: auto;
+}
+.game-container {
+  text-align: center;
+}
+
+.hand-container {
+  margin: 20px;
+}
+
+.card-hand {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.card-image {
+  width: 80px; /* Adjust size as needed */
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
