@@ -1,13 +1,14 @@
 # app.py
 from flask import Flask, jsonify
 from flask_cors import CORS
+from deck import Deck
 import random
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 app = Flask(__name__)
 CORS(app)
 
-deck = []
+deck = Deck()
 player_hand = []
 dealer_hand = []
 
