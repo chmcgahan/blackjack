@@ -17,6 +17,11 @@ def get_deck():
 @app.route('/start_game', methods=['POST'])
 def start_game():
     global player_hand, dealer_hand
+
+    if deck.remaining_cards() < 10:
+        deck.build_deck()
+        logging.info("Deck reshuffled as it had fewer than 10 cards")
+
     player_hand = [deck.draw_card(), deck.draw_card()]
     dealer_hand = [deck.draw_card(), deck.draw_card()]
     return jsonify({
