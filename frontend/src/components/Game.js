@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Deck from './Deck';
 
 const getCardImage = (imagePath) => {
   return imagePath; // Just return the path provided by the backend
@@ -9,7 +8,8 @@ const Game = () => {
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [message, setMessage] = useState("");
-  const [deck, setDeck] = useState([]);
+  const [cardsLeft, setCardsLeft] = useState(52);  // Assuming a full deck initially
+  const [bestMove, setBestMove] = useState("Hit");  // Default best move
 
   const handleStartGame = () => {
     fetch('http://127.0.0.1:5000/start_game', { method: 'POST' })
@@ -18,6 +18,8 @@ const Game = () => {
         setPlayerHand(data.player_hand);
         setDealerHand(data.dealer_hand);
         setMessage(data.message || "Game started!");
+        setCardsLeft(data.cardsLeft);  // Set the number of cards left
+        setBestMove(data.bestMove || "Hit");  // Set the best move
       })
       .catch(error => console.error("Error starting game:", error));
   };
@@ -28,6 +30,8 @@ const Game = () => {
       .then(data => {
         setPlayerHand(data.player_hand);
         setMessage(data.message);
+        setCardsLeft(data.cardsLeft);  // Update cards left after player draw
+        setBestMove(data.bestMove || "Hit");  // Update the best move
       })
       .catch(error => console.error("Error drawing card:", error));
   };
@@ -38,54 +42,65 @@ const Game = () => {
       .then(data => {
         setDealerHand(data.dealer_hand);
         setMessage(data.message);
+        setCardsLeft(data.cardsLeft);  // Update cards left after dealer draw
+        setBestMove(data.bestMove || "Hit");  // Update the best move
       })
       .catch(error => console.error("Error with dealer draw:", error));
   };
 
   return (
-<div className="game-container">
-  <h1>Card Game</h1>
+    <div className="game-container">
+      <h1>Blackjack Game</h1>
 
-  <div className="controls">
-    <button onClick={handleStartGame}>Start Game</button>
-    <button onClick={handlePlayerDraw}>Draw Card</button>
-    <button onClick={handleDealerDraw}>Dealer Draw</button>
-  </div>
+      <div className="controls">
+        <button onClick={handleStartGame}>Start Game</button>
+        <button onClick={handlePlayerDraw}>Draw Card</button>
+        <button onClick={handleDealerDraw}>Dealer Draw</button>
+      </div>
 
-  <div className="hand-container">
-    <h2>Player Hand:</h2>
-    <div className="card-hand">
-      {playerHand.map((cardImage, index) => (
-        <img
-          key={index}
-          src={getCardImage(cardImage)}
-          alt={`Player Card ${index + 1}`}
-          className="card-image"
-        />
-      ))}
+      <div className="hand-container">
+        <h2>Player Hand:</h2>
+        <div className="card-hand">
+          {playerHand.map((cardImage, index) => (
+            <img
+              key={index}
+              src={getCardImage(cardImage)}
+              alt={`Player Card ${index + 1}`}
+              className="card-image"
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="hand-container">
+        <h2>Dealer Hand:</h2>
+        <div className="card-hand">
+          {dealerHand.map((cardImage, index) => (
+            <img
+              key={index}
+              src={getCardImage(cardImage)}
+              alt={`Dealer Card ${index + 1}`}
+              className="card-image"
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="message-box">
+        <h3>{message}</h3>
+      </div>
+
+      {/* Info Box on the Top Right */}
+      <div className="info-box">
+        <p>Cards Left: {cardsLeft}</p>
+      </div>
+
+      {/* Best Move Window on the Middle Right */}
+      <div className="best-move">
+        <p>Best Move: {bestMove}</p>
+      </div>
+
     </div>
-  </div>
-
-  <div className="hand-container">
-    <h2>Dealer Hand:</h2>
-    <div className="card-hand">
-      {dealerHand.map((cardImage, index) => (
-        <img
-          key={index}
-          src={getCardImage(cardImage)}
-          alt={`Dealer Card ${index + 1}`}
-          className="card-image"
-        />
-      ))}
-    </div>
-  </div>
-
-  <div className="message-box">
-    <h3>{message}</h3>
-  </div>
-
-  {/* <Deck deck={deck} /> */}
-</div>
   );
 };
 

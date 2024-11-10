@@ -50,3 +50,33 @@
   border: 1px solid #ddd;
   background-color: #f9f9f9;
 }
+
+
+/* Info Box on the Top Right */
+.info-box {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 150px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Best Move Window in the Middle Right */
+.best-move {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background-color: #e7f5e7;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #8bc34a;
+  width: 200px;
+  font-weight: bold;
+  font-size: 16px;
+}

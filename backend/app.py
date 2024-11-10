@@ -24,10 +24,14 @@ def start_game():
 
     player_hand = [deck.draw_card(), deck.draw_card()]
     dealer_hand = [deck.draw_card(), deck.draw_card()]
+    cards_left = deck.remaining_cards()
+    best_move = "Hit" #to implement
     return jsonify({
         "message": "Game started",
         "player_hand": [card.image for card in player_hand],
-        "dealer_hand": [dealer_hand[0].image, "Hidden"]
+        "dealer_hand": [dealer_hand[0].image, "Hidden"],
+        "cardsLeft": cards_left,
+        "bestMove": best_move
     })
 
 @app.route('/player_draw', methods=['POST'])
