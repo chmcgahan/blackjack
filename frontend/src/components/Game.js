@@ -1,27 +1,43 @@
 import React, { useEffect, useState } from 'react';
 
 const getCardImage = (imagePath) => {
-  return imagePath; // Just return the path provided by the backend
+  return imagePath;
 };
 
 const Game = () => {
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [message, setMessage] = useState("");
-  const [cardsLeft, setCardsLeft] = useState(52);  // Assuming a full deck initially
-  const [bestMove, setBestMove] = useState("Hit");  // Default best move
+  const [cardsLeft, setCardsLeft] = useState(52);
+  const [bankBalance, setBankBalance] = useState(1000);
+  const [bestMove, setBestMove] = useState("Hit");
 
-  const handleStartGame = () => {
-    fetch('http://127.0.0.1:5000/start_game', { method: 'POST' })
+  const handleNewGame = () => {
+    fetch('http://127.0.0.1:5000/new_game', { method: 'POST' })
       .then(response => response.json())
       .then(data => {
         setPlayerHand(data.player_hand);
         setDealerHand(data.dealer_hand);
-        setMessage(data.message || "Game started!");
-        setCardsLeft(data.cardsLeft);  // Set the number of cards left
-        setBestMove(data.bestMove || "Hit");  // Set the best move
+        setMessage(data.message);
+        setCardsLeft(data.cardsLeft);
+        setBankBalance(data.bankBalance);
+        setBestMove(data.bestMove);
       })
-      .catch(error => console.error("Error starting game:", error));
+      .catch(error => console.error("Error starting new game:", error));
+  };
+
+  const handleNextHand = () => {
+    fetch('http://127.0.0.1:5000/next_hand', { method: 'POST' })
+      .then(response => response.json())
+      .then(data => {
+        setPlayerHand(data.player_hand);
+        setDealerHand(data.dealer_hand);
+        setMessage(data.message);
+        setCardsLeft(data.cardsLeft);
+        setBestMove(data.bestMove);
+        setBankBalance(data.bankBalance);
+      })
+      .catch(error => console.error("Error starting round:", error));
   };
 
   const handlePlayerDraw = () => {
@@ -30,8 +46,9 @@ const Game = () => {
       .then(data => {
         setPlayerHand(data.player_hand);
         setMessage(data.message);
-        setCardsLeft(data.cardsLeft);  // Update cards left after player draw
-        setBestMove(data.bestMove || "Hit");  // Update the best move
+        setCardsLeft(data.cardsLeft);
+        setBestMove(data.bestMove);
+        setBankBalance(data.bankBalance);
       })
       .catch(error => console.error("Error drawing card:", error));
   };
@@ -42,8 +59,9 @@ const Game = () => {
       .then(data => {
         setDealerHand(data.dealer_hand);
         setMessage(data.message);
-        setCardsLeft(data.cardsLeft);  // Update cards left after dealer draw
-        setBestMove(data.bestMove || "Hit");  // Update the best move
+        setCardsLeft(data.cardsLeft);
+        setBestMove(data.bestMove);
+        setBankBalance(data.bankBalance);
       })
       .catch(error => console.error("Error with dealer draw:", error));
   };
@@ -53,7 +71,8 @@ const Game = () => {
       <h1>Blackjack Game</h1>
 
       <div className="controls">
-        <button onClick={handleStartGame}>Start Game</button>
+        <button onClick={handleNewGame} style={{ fontSize: '18px', padding: '10px 20px' }}>New Game</button>
+        <button onClick={handleNextHand}>Next Hand</button>
         <button onClick={handlePlayerDraw}>Draw Card</button>
         <button onClick={handleDealerDraw}>Dealer Draw</button>
       </div>
@@ -90,16 +109,17 @@ const Game = () => {
         <h3>{message}</h3>
       </div>
 
-      {/* Info Box on the Top Right */}
       <div className="info-box">
         <p>Cards Left: {cardsLeft}</p>
       </div>
 
-      {/* Best Move Window on the Middle Right */}
+      <div className="bank-balance-box">
+        <p>Bank Balance: ${bankBalance}</p>
+      </div>
+
       <div className="best-move">
         <p>Best Move: {bestMove}</p>
       </div>
-
     </div>
   );
 };

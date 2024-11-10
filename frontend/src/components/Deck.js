@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
 const Deck = () => {
-  const [deck, setDeck] = useState([]);
+  const [deckState, setDeckState] = useState([]);
   const [error, setError] = useState(null);
+  const [cardsLeft, setCardsLeft] = useState(0); // Track remaining cards from gameState
 
-  // Fetch initial deck state on component mount
+  // Fetch initial game state on component mount
   useEffect(() => {
-    fetchDeck();
+    fetchGameState();
   }, []);
 
-  // Function to fetch the deck
-  const fetchDeck = () => {
+  // Function to fetch the entire game state
+  const fetchGameState = () => {
     fetch('http://127.0.0.1:5000/get_deck')
       .then(response => {
         if (!response.ok) {
@@ -19,7 +20,8 @@ const Deck = () => {
         return response.json();
       })
       .then(data => {
-        setDeck(data.deck);  // Update deck state
+        setDeckState(data.deck);  // Update deck state
+        setCardsLeft(data.deck.length); // Update cards left based on gameState
       })
       .catch(error => {
         console.error("Error fetching deck:", error);
@@ -27,7 +29,7 @@ const Deck = () => {
       });
   };
 
-  // Function to draw a card and update the deck
+  // Function to draw a card and update game state
   const drawCard = () => {
     fetch('http://127.0.0.1:5000/player_draw', { method: 'POST' })
       .then(response => {
@@ -37,8 +39,8 @@ const Deck = () => {
         return response.json();
       })
       .then(data => {
-        setDeck(data.deck);  // Update deck state with the response
-        // Additional logic for player hand, total, message, etc., can go here
+        setDeckState(data.player_hand);  // Update player hand state with the response
+        setCardsLeft(data.cardsLeft);    // Update remaining cards
       })
       .catch(error => {
         console.error("Error drawing card:", error);
@@ -54,11 +56,11 @@ const Deck = () => {
       ) : (
         <>
           <ul>
-            {deck.map((card, index) => (
+            {deckState.map((card, index) => (
               <li key={index}>{card}</li>
             ))}
           </ul>
-          <p>Total cards remaining: {deck.length}</p>
+          <p>Total cards remaining: {cardsLeft}</p>
           <button onClick={drawCard}>Draw Card</button> {/* Button to draw a card */}
         </>
       )}

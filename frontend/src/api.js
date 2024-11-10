@@ -3,9 +3,9 @@ import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const startGame = async () => {
+export const newHand = async () => {
   try {
-    const response = await axios.post(`${API_URL}/start_game`);
+    const response = await axios.post(`${API_URL}/new_hand`);
     return response.data;
   } catch (error) {
     console.error("Error starting the game:", error);

@@ -52,7 +52,7 @@
 }
 
 
-/* Info Box on the Top Right */
+/* Info Box for Cards Left (Top Right) */
 .info-box {
   position: absolute;
   top: 10px;
@@ -65,6 +65,21 @@
   font-size: 16px;
   font-weight: bold;
 }
+
+/* Bank Balance Box (Under Cards Left) */
+.bank-balance-box {
+  position: absolute;
+  top: 70px; /* Positioning just below .info-box */
+  right: 10px;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 150px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
 
 /* Best Move Window in the Middle Right */
 .best-move {
