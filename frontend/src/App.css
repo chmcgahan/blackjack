@@ -10,6 +10,9 @@
 }
 
 .controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Adjust gap size as desired */
   margin-bottom: 20px;
 }
 

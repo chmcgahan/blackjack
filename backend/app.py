@@ -15,7 +15,10 @@ gameState = {
     "remaining_cards": deck.remaining_cards(),
     "bank_balance": 1000,
     "message": "",
-    "best_move": "Hit"
+    "best_move": "Hit",
+    "hands_won": 0,
+    "hands_lost": 0,
+    "current_bet": 0,
 }
 
 @app.route('/get_deck', methods=['GET'])
@@ -33,10 +36,28 @@ def new_game():
         "remaining_cards": deck.remaining_cards(),
         "bank_balance": 1000,
         "message": "New game started! Good luck!",
-        "best_move": "Hit"
+        "best_move": "Hit",
+        "hands_won": 0,
+        "hands_lost": 0,
+        "current_bet": 0,
     }
 
     return next_hand()
+
+def place_bet(bet_amount):
+    if 1 <= bet_amount <= gameState["bank_balance"]:
+        gameState["current_bet"] = bet_amount
+        gameState["bank_balance"] -= bet_amount
+        return True
+    return False
+
+def settle_bet(outcome):
+    if outcome == "win":
+        gameState["bank_balance"] += gameState["current_bet"] * 2
+    elif outcome == "draw":
+        gameState["bank_balance"] += gameState["current_bet"]
+    elif outcome == "blackjack":
+        gameState["bank_balance"] += gameState["current_bet"] * 3
 
 @app.route('/next_hand', methods=['POST'])
 def next_hand():
@@ -105,17 +126,26 @@ def end_game():
 
     player_total = deck.sum_values(gameState["player_hand"])
     dealer_total = deck.sum_values(gameState["dealer_hand"])
-
+    # import ipdb; ipdb.set_trace()
+    outcome = ""
     if player_total > 21:
         gameState["message"] = "Player busts! Dealer wins."
+        gameState["hands_lost"] += 1
+        outcome = "win"
     elif dealer_total > 21:
         gameState["message"] = "Dealer busts. Player wins!"
+        gameState["hands_won"] += 1
     elif player_total > dealer_total:
         gameState["message"] = "Player wins!"
+        gameState["hands_won"] += 1
+        outcome = "win"
     elif dealer_total == player_total:
         gameState["message"] = "It's a draw!"
+        outcome = "draw"
     else:
         gameState["message"] = "Dealer wins!"
+        gameState["hands_lost"] += 1
+    settle_bet(outcome)
 
     return jsonify({
         "message": gameState["message"],
@@ -123,7 +153,9 @@ def end_game():
         "dealer_hand": [card.image for card in gameState["dealer_hand"]],
         "cardsLeft": gameState["remaining_cards"],
         "bestMove": gameState["best_move"],
-        "bank_balance": gameState["bank_balance"]
+        "bank_balance": gameState["bank_balance"],
+        "hands_won": gameState["hands_won"],
+        "hands_lost": gameState["hands_lost"],
     })
 
 if __name__ == "__main__":
